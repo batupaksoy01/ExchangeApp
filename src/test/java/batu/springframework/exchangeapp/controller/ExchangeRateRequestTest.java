@@ -44,6 +44,7 @@ public class ExchangeRateRequestTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		Mockito.verify(serviceMock.getExchangeRate("USD", "GBP"), Mockito.times(1));
 	}
 	
 	//Parameter missing
