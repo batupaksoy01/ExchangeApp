@@ -1,0 +1,19 @@
+package batu.springframework.exchangeapp.dto;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class ConversionInputDTO {
+	@NotBlank(message="sourceAmount field is required.")
+	@Positive(message="sourceAmount must be positive.")
+	private float sourceAmount;
+	@NotBlank(message="source field is required.")
+	private String source;
+	@NotBlank(message="target field is required.")
+	private String target;
+}
