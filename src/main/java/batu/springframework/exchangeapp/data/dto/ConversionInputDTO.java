@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.dto;
+package batu.springframework.exchangeapp.data.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;

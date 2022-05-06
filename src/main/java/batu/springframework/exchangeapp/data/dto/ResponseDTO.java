@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.dto;
+package batu.springframework.exchangeapp.data.dto;
 
 
 public abstract class ResponseDTO {

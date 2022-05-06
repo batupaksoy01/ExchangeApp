@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.exception;
+package batu.springframework.exchangeapp.data.exception;
 
 import org.springframework.stereotype.Component;
 
@@ -12,10 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-public class WrongInputException extends RuntimeException {
+public class ApiException extends RuntimeException{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 1L;
 	private String errorMessage;
 }

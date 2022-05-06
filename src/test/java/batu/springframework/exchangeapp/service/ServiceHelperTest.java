@@ -3,11 +3,11 @@ package batu.springframework.exchangeapp.service;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import batu.springframework.exchangeapp.data.dto.FixerResponseDTO;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
-
-import batu.springframework.exchangeapp.FixerResponse;
 
 public class ServiceHelperTest {
 	
@@ -19,7 +19,7 @@ public class ServiceHelperTest {
 	//EUR,X
 	@Test
 	public void whenSourceIsEUR_thenResponseIsParseable() {
-		FixerResponse testResponse = testObject.makeApiCall("EUR", "USD");
+		FixerResponseDTO testResponse = testObject.makeApiCall("EUR", "USD");
 		assertTrue(testResponse.isSuccess());
 		Map<String,Float> rates = testResponse.getRates();
 		assertNotNull(rates);
@@ -31,7 +31,7 @@ public class ServiceHelperTest {
 	//X,EUR
 	@Test
 	public void whenTargetIsEUR_thenResponseIsParseable() {
-		FixerResponse testResponse = testObject.makeApiCall("USD", "EUR");
+		FixerResponseDTO testResponse = testObject.makeApiCall("USD", "EUR");
 		assertTrue(testResponse.isSuccess());
 		Map<String,Float> rates = testResponse.getRates();
 		assertNotNull(rates);
@@ -43,7 +43,7 @@ public class ServiceHelperTest {
 	//X,X
 	@Test
 	public void whenNeitherIsEUR_thenResponseIsParseable() {
-		FixerResponse testResponse = testObject.makeApiCall("GBP", "USD");
+		FixerResponseDTO testResponse = testObject.makeApiCall("GBP", "USD");
 		assertTrue(testResponse.isSuccess());
 		Map<String,Float> rates = testResponse.getRates();
 		assertNotNull(rates);
@@ -54,7 +54,7 @@ public class ServiceHelperTest {
 	
 	@Test
 	public void whenApiReturnsError_thenResponseIsParsable() {
-		FixerResponse testResponse = testObject.makeApiCall("x", "y");
+		FixerResponseDTO testResponse = testObject.makeApiCall("x", "y");
 		assertFalse(testResponse.isSuccess());
 		Map<String,String> error = testResponse.getError();
 		assertNotNull(error);
@@ -64,7 +64,7 @@ public class ServiceHelperTest {
 	@Test
 	public void whenResponseIsPositive_theRateCalculated() {
 		ServiceHelper serviceMock = Mockito.mock(ServiceHelper.class);
-		FixerResponse mockResponse = new FixerResponse();
+		FixerResponseDTO mockResponse = new FixerResponseDTO();
 		mockResponse.setSuccess(true);
 		mockResponse.setRates(Map.of(
 			    "EUR", (float)1.5,
@@ -78,7 +78,7 @@ public class ServiceHelperTest {
 	@Test
 	public void whenResponseIsNegative_thenErrorCodeReturned() {
 		ServiceHelper serviceMock = Mockito.mock(ServiceHelper.class);
-		FixerResponse mockResponse = new FixerResponse();
+		FixerResponseDTO mockResponse = new FixerResponseDTO();
 		mockResponse.setSuccess(false);
 		mockResponse.setError(Map.of(
 			    "code", "102"

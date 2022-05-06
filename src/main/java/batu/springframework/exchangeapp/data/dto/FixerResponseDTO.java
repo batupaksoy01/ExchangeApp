@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp;
+package batu.springframework.exchangeapp.data.dto;
 
 import java.util.Date;
 import java.util.Map;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FixerResponse {
+public class FixerResponseDTO {
 		private boolean success = false;
 		private Long timestamp;
 		private Date date;

@@ -10,7 +10,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import batu.springframework.exchangeapp.dto.FailResponseDTO;
+import batu.springframework.exchangeapp.data.dto.FailResponseDTO;
 
 class MissingRequestParameterTest {
 

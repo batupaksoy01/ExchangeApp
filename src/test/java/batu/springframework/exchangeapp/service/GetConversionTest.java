@@ -12,11 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import batu.springframework.exchangeapp.dto.ConversionDTO;
-import batu.springframework.exchangeapp.dto.ConversionInputDTO;
-import batu.springframework.exchangeapp.exception.ApiException;
-import batu.springframework.exchangeapp.models.Conversion;
-import batu.springframework.exchangeapp.repositories.ConversionRepository;
+import batu.springframework.exchangeapp.data.dto.ConversionDTO;
+import batu.springframework.exchangeapp.data.dto.ConversionInputDTO;
+import batu.springframework.exchangeapp.data.exception.ApiException;
+import batu.springframework.exchangeapp.data.model.Conversion;
+import batu.springframework.exchangeapp.data.repository.ConversionRepository;
 
 public class GetConversionTest {
 	

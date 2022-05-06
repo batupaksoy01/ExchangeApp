@@ -15,11 +15,12 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import batu.springframework.exchangeapp.dto.FailResponseDTO;
-import batu.springframework.exchangeapp.exception.ApiException;
-import batu.springframework.exchangeapp.exception.WrongInputException;
+import batu.springframework.exchangeapp.data.dto.FailResponseDTO;
+import batu.springframework.exchangeapp.data.exception.ApiException;
+import batu.springframework.exchangeapp.data.exception.WrongInputException;
 
 @ControllerAdvice
 public class ConversionControllerAdvice extends ResponseEntityExceptionHandler {
@@ -31,13 +32,18 @@ public class ConversionControllerAdvice extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(ApiException.class) 
 	public ResponseEntity<FailResponseDTO> handleApiException(ApiException e){
-		return new ResponseEntity<FailResponseDTO>(new FailResponseDTO(e.getErrorMessage()), HttpStatus.NOT_FOUND);
+		return new ResponseEntity<FailResponseDTO>(new FailResponseDTO(e.getErrorMessage()), HttpStatus.BAD_GATEWAY);
 	}
 	
 	@ExceptionHandler(ConstraintViolationException.class) 
 	public ResponseEntity<FailResponseDTO> handleConstraintViolationException(ConstraintViolationException e){
 		return new ResponseEntity<FailResponseDTO>(new FailResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
-	} 
+	}
+	
+	@ExceptionHandler(ResponseStatusException.class) 
+	public ResponseEntity<Object> handleResponseStatusException(ResponseStatusException e){
+		return new ResponseEntity<Object>(null, e.getStatus());
+	}
 	
 	@Override
 	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,

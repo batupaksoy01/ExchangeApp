@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.dto;
+package batu.springframework.exchangeapp.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package batu.springframework.exchangeapp.service;
 
-import batu.springframework.exchangeapp.dto.ConversionDTO;
-import batu.springframework.exchangeapp.exception.ApiException;
+import batu.springframework.exchangeapp.data.dto.ConversionDTO;
+import batu.springframework.exchangeapp.data.exception.ApiException;
 
 import java.util.List;
 

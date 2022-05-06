@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import batu.springframework.exchangeapp.dto.ConversionInputDTO;
-import batu.springframework.exchangeapp.dto.SuccessResponseDTO;
+import batu.springframework.exchangeapp.data.dto.ConversionInputDTO;
+import batu.springframework.exchangeapp.data.dto.SuccessResponseDTO;
 import batu.springframework.exchangeapp.service.ExchangeRateService;
 import batu.springframework.exchangeapp.service.GetConversionService;
 import batu.springframework.exchangeapp.service.GetConversionsService;
@@ -36,6 +36,15 @@ public class ConversionController {
 	
 	@Autowired
 	private GetConversionsService getConversionsService;
+	
+
+	public ConversionController(ExchangeRateService exchangeRateService, GetConversionService getConversionService,
+			GetConversionsService getConversionsService) {
+		super();
+		this.exchangeRateService = exchangeRateService;
+		this.getConversionService = getConversionService;
+		this.getConversionsService = getConversionsService;
+	}
 
 	@PostMapping("/getConversion")
 	@ApiOperation(value="Create a currency conversion in the database.", 
@@ -59,6 +68,4 @@ public class ConversionController {
 			@RequestParam("target") @NotBlank(message="Target parameter is required.") @ApiParam(required=true) String target) {
 		return new ResponseEntity<SuccessResponseDTO>(exchangeRateService.getExchangeRate(source, target), HttpStatus.OK);
 	}
-	
-	
 }

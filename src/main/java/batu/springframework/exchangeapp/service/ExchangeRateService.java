@@ -6,17 +6,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import batu.springframework.exchangeapp.dto.ConversionDTO;
-import batu.springframework.exchangeapp.dto.SuccessResponseDTO;
-import batu.springframework.exchangeapp.exception.ApiException;
+import batu.springframework.exchangeapp.data.dto.ConversionDTO;
+import batu.springframework.exchangeapp.data.dto.SuccessResponseDTO;
+import batu.springframework.exchangeapp.data.exception.ApiException;
 
 @Service
 public class ExchangeRateService {
 	private ServiceHelper serviceHelper;
-	
-	public ExchangeRateService() {
-		super();
-	}
 
 	public ExchangeRateService(ServiceHelper serviceHelper) {
 		super();
@@ -25,13 +21,18 @@ public class ExchangeRateService {
 
 	public SuccessResponseDTO getExchangeRate(String source, String target) {
 		float rate = serviceHelper.calculateRate(source, target);
-		if(rate > 0) {
-			List<ConversionDTO> conversionList = new ArrayList<ConversionDTO>();
-			conversionList.add(new ConversionDTO(source,target,1,rate,LocalDateTime.now()));
-			return new SuccessResponseDTO(conversionList);
-		}
-		else {
-			throw new ApiException(serviceHelper.mapError(rate));
-		}
+		List<ConversionDTO> conversionList = new ArrayList<ConversionDTO>();
+		conversionList.add(new ConversionDTO(source,target,1,rate,LocalDateTime.now()));
+		return new SuccessResponseDTO(conversionList);
 	}
+
+	public ServiceHelper getServiceHelper() {
+		return serviceHelper;
+	}
+
+	public void setServiceHelper(ServiceHelper serviceHelper) {
+		this.serviceHelper = serviceHelper;
+	}
+	
+	
 }
