@@ -1,24 +1,31 @@
 package batu.springframework.exchangeapp.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import batu.springframework.exchangeapp.data.dto.FixerResponseDTO;
 import batu.springframework.exchangeapp.data.exception.WrongInputException;
-import batu.springframework.exchangeapp.data.fixerApi.fixerApiCaller;
-import batu.springframework.exchangeapp.data.model.Conversion;
-import batu.springframework.exchangeapp.data.repository.ConversionRepository;
+import batu.springframework.exchangeapp.data.fixerApi.FixerApiCaller;
 
 @Service
 public class ServiceHelper {
+	
+	FixerApiCaller apiCaller;
+	
+	
+	public ServiceHelper() {
+		super();
+		apiCaller = new FixerApiCaller();
+	}
+
+	public ServiceHelper(FixerApiCaller apiCaller) {
+		super();
+		this.apiCaller = apiCaller;
+	}
+
 	public Float calculateRate(String source, String target) {
 		float targetRate;
 		float sourceRate;
-		FixerResponseDTO response = fixerApiCaller.makeApiCall(source,target);
+		FixerResponseDTO response = apiCaller.makeApiCall(source,target);
 		try {
 			targetRate = response.getRates().get(target);
 		}	

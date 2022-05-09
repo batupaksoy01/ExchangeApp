@@ -60,11 +60,11 @@ public class ConversionControllerAdvice extends ResponseEntityExceptionHandler {
 			missingParam = missingParam.substring(0, 1).toUpperCase() + missingParam.substring(1);
 			return new ResponseEntity<Object>(new FailResponseDTO(missingParam + " currency is missing."), HttpStatus.NOT_FOUND);
 		}
-		if(endpoint.equals("uri=/api/getConversions")) {
+		/*if(endpoint.equals("uri=/api/getConversions")) {
 			String missingParam = ex.getParameterName();
 			missingParam = missingParam.substring(0, 1).toUpperCase() + missingParam.substring(1);
 			return new ResponseEntity<Object>(new FailResponseDTO(missingParam + " parameter is required."), HttpStatus.NOT_FOUND);
-		}
+		}*/
 		return super.handleMissingServletRequestParameter(ex,headers,status, request);
 	}
 

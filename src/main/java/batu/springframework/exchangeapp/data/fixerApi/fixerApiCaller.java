@@ -8,21 +8,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 import batu.springframework.exchangeapp.data.dto.FixerResponseDTO;
 import batu.springframework.exchangeapp.data.exception.ApiException;
 
-public class fixerApiCaller {
-	private static final String API_ACCESS_KEY = "df9cabc38b212ae8ad94f522e1407f96";
+public class FixerApiCaller {
+	private final String API_ACCESS_KEY = "df9cabc38b212ae8ad94f522e1407f96";
 	
-	public static FixerResponseDTO makeApiCall(String source, String target) {
+	public FixerResponseDTO makeApiCall(String source, String target) {
 		RestTemplate restTemplate = new RestTemplate();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://data.fixer.io/api/latest")
 				.queryParam("access_key", API_ACCESS_KEY)
 				.queryParam("symbols", source + ',' + target);
-		throw new ResponseStatusException(HttpStatus.BAD_GATEWAY);
-		/*FixerResponseDTO response = restTemplate.getForObject(builder.toUriString(), FixerResponseDTO.class);
+		FixerResponseDTO response = restTemplate.getForObject(builder.toUriString(), FixerResponseDTO.class);
 		checkFixerResponse(response);
-		return response;*/
+		return response;
 	}
 	
-	public static void checkFixerResponse(FixerResponseDTO response) {
+	public void checkFixerResponse(FixerResponseDTO response) {
 		if(!response.isSuccess()) {
 			String errorCode;
 			try {

@@ -19,13 +19,12 @@ import batu.springframework.exchangeapp.data.repository.ConversionRepository;
 public class GetConversionsService {
 	@Autowired
 	private ConversionRepository conversionRepository;
-	private ServiceHelper serviceHelper;
 	
-	public GetConversionsService(ServiceHelper serviceHelper) {
+	public GetConversionsService(ConversionRepository conversionRepository) {
 		super();
-		this.serviceHelper = serviceHelper;
+		this.conversionRepository = conversionRepository;
 	}
-	
+
 	public SuccessResponseDTO getConversions(int page, int size) {
 		List<ConversionDTO> conversionDTOList = new ArrayList<ConversionDTO>();
 		Pageable pageable = PageRequest.of(page, size);

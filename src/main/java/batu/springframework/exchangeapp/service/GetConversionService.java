@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import batu.springframework.exchangeapp.data.dto.ConversionDTO;
 import batu.springframework.exchangeapp.data.dto.ConversionInputDTO;
 import batu.springframework.exchangeapp.data.dto.SuccessResponseDTO;
-import batu.springframework.exchangeapp.data.exception.ApiException;
 import batu.springframework.exchangeapp.data.model.Conversion;
 import batu.springframework.exchangeapp.data.repository.ConversionRepository;
 
@@ -19,10 +18,12 @@ import batu.springframework.exchangeapp.data.repository.ConversionRepository;
 public class GetConversionService {
 	@Autowired
 	private ConversionRepository conversionRepository;
+	@Autowired
 	private ServiceHelper serviceHelper;
-	
-	public GetConversionService(ServiceHelper serviceHelper) {
+
+	public GetConversionService(ConversionRepository conversionRepository, ServiceHelper serviceHelper) {
 		super();
+		this.conversionRepository = conversionRepository;
 		this.serviceHelper = serviceHelper;
 	}
 

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import batu.springframework.exchangeapp.data.dto.ConversionDTO;
 import batu.springframework.exchangeapp.data.dto.SuccessResponseDTO;
-import batu.springframework.exchangeapp.data.exception.ApiException;
 
 @Service
 public class ExchangeRateService {
@@ -25,14 +24,4 @@ public class ExchangeRateService {
 		conversionList.add(new ConversionDTO(source,target,1,rate,LocalDateTime.now()));
 		return new SuccessResponseDTO(conversionList);
 	}
-
-	public ServiceHelper getServiceHelper() {
-		return serviceHelper;
-	}
-
-	public void setServiceHelper(ServiceHelper serviceHelper) {
-		this.serviceHelper = serviceHelper;
-	}
-	
-	
 }

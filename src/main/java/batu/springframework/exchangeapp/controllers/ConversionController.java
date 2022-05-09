@@ -56,9 +56,9 @@ public class ConversionController {
 	@GetMapping("/getConversions")
 	@ApiOperation(value="Get all currency conversions in the database.", 
 	notes="Provide page number and size to receive the previous conversions in the page.", response=SuccessResponseDTO.class)
-	ResponseEntity<SuccessResponseDTO> getConversions(@RequestParam("page") @Positive(message="Page parameter must be positive.") @NotNull @ApiParam(required=true) int page, 
-			@RequestParam("size") @Positive(message="Size parameter must be positive.") @NotNull @ApiParam(required=true) int size) {
-		return new ResponseEntity<SuccessResponseDTO>(getConversionsService.getConversions(page,size), HttpStatus.OK);
+	ResponseEntity<SuccessResponseDTO> getConversions(@RequestParam(name="page", defaultValue="1") @Positive(message="Page parameter must be positive.")  int page, 
+			@RequestParam(name="size", defaultValue="10") @Positive(message="Size parameter must be positive.") int size) {
+		return new ResponseEntity<SuccessResponseDTO>(getConversionsService.getConversions(page-1,size), HttpStatus.OK);
 	}
 	
 	@GetMapping("/exchangeRate")
