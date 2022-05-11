@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.data.dto;
+package batu.springframework.exchangeapp.data.dtos;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -9,10 +9,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ConversionInputDTO {
+public class ConversionInputDto {
 	@NotNull(message="sourceAmount field is required.")
 	@Positive(message="sourceAmount must be positive.")
-	private float sourceAmount;
+	private Float sourceAmount;
 	@NotBlank(message="source field is required.")
 	private String source;
 	@NotBlank(message="target field is required.")

@@ -4,9 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import batu.springframework.exchangeapp.data.dto.FixerResponseDTO;
-import batu.springframework.exchangeapp.data.exception.WrongInputException;
-import batu.springframework.exchangeapp.data.fixerApi.FixerApiCaller;
+import batu.springframework.exchangeapp.data.dtos.FixerResponseDto;
+import batu.springframework.exchangeapp.data.exceptions.WrongInputException;
+import batu.springframework.exchangeapp.external.FixerApiCaller;
+import batu.springframework.exchangeapp.services.ServiceHelper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +18,7 @@ public class ServiceHelperTest {
 	
 	FixerApiCaller apiCallerMock = Mockito.mock(FixerApiCaller.class);
 	ServiceHelper testObject = new ServiceHelper(apiCallerMock);
-	FixerResponseDTO mockResponse = new FixerResponseDTO();
+	FixerResponseDto mockResponse = new FixerResponseDto();
 	
 	
 	@Test

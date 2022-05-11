@@ -8,8 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.junit.jupiter.api.Assertions;
 
-import batu.springframework.exchangeapp.data.dto.FixerResponseDTO;
-import batu.springframework.exchangeapp.data.exception.ApiException;
+import batu.springframework.exchangeapp.data.dtos.FixerResponseDto;
+import batu.springframework.exchangeapp.data.exceptions.ApiException;
+import batu.springframework.exchangeapp.external.FixerApiCaller;
 
 public class FixerApiCallerTest {
 
@@ -21,7 +22,7 @@ public class FixerApiCallerTest {
 	//EUR,X
 	@Test
 	public void whenSourceIsEUR_thenResponseIsParseable() {
-		FixerResponseDTO testResponse = testObject.makeApiCall("EUR", "USD");
+		FixerResponseDto testResponse = testObject.makeApiCall("EUR", "USD");
 		Assertions.assertTrue(testResponse.isSuccess());
 		Map<String,Float> rates = testResponse.getRates();
 		Assertions.assertNotNull(rates);
@@ -33,7 +34,7 @@ public class FixerApiCallerTest {
 	//X,EUR
 	@Test
 	public void whenTargetIsEUR_thenResponseIsParseable() {
-		FixerResponseDTO testResponse = testObject.makeApiCall("USD", "EUR");
+		FixerResponseDto testResponse = testObject.makeApiCall("USD", "EUR");
 		Assertions.assertTrue(testResponse.isSuccess());
 		Map<String,Float> rates = testResponse.getRates();
 		Assertions.assertNotNull(rates);
@@ -45,7 +46,7 @@ public class FixerApiCallerTest {
 	//X,X
 	@Test
 	public void whenNeitherIsEUR_thenResponseIsParseable() {
-		FixerResponseDTO testResponse = testObject.makeApiCall("GBP", "USD");
+		FixerResponseDto testResponse = testObject.makeApiCall("GBP", "USD");
 		Assertions.assertTrue(testResponse.isSuccess());
 		Map<String,Float> rates = testResponse.getRates();
 		Assertions.assertNotNull(rates);
@@ -59,12 +60,12 @@ public class FixerApiCallerTest {
 		FixerApiCaller callerMock = Mockito.mock(FixerApiCaller.class);
 		Mockito.when(callerMock.makeApiCall(Mockito.anyString(), Mockito.anyString())).thenCallRealMethod();
 		callerMock.makeApiCall("GBP", "USD");
-		Mockito.verify(callerMock, Mockito.times(1)).checkFixerResponse(Mockito.any(FixerResponseDTO.class));
+		Mockito.verify(callerMock, Mockito.times(1)).checkFixerResponse(Mockito.any(FixerResponseDto.class));
 	}
 	
 	@Test
 	public void whenErrorCodeIsNull_thenExceptionThrown() {
-		FixerResponseDTO testInput = new FixerResponseDTO();
+		FixerResponseDto testInput = new FixerResponseDto();
 		testInput.setSuccess(false);
 		ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {testObject.checkFixerResponse(testInput);});
 		Assertions.assertEquals(e.getStatus(), HttpStatus.BAD_GATEWAY);
@@ -72,7 +73,7 @@ public class FixerApiCallerTest {
 	
 	@Test
 	public void whenErrorCodeIsUnique_thenDefaultExceptionThrown() {
-		FixerResponseDTO testInput = new FixerResponseDTO();
+		FixerResponseDto testInput = new FixerResponseDto();
 		testInput.setSuccess(false);
 		testInput.setError(Map.of("code", "205"));
 		ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {testObject.checkFixerResponse(testInput);});
@@ -81,7 +82,7 @@ public class FixerApiCallerTest {
 	
 	@Test
 	public void whenErrorCode202_thenExceptionThrown() {
-		FixerResponseDTO testInput = new FixerResponseDTO();
+		FixerResponseDto testInput = new FixerResponseDto();
 		testInput.setSuccess(false);
 		testInput.setError(Map.of("code", "202"));
 		ApiException e = Assertions.assertThrows(ApiException.class, () -> {testObject.checkFixerResponse(testInput);});
@@ -90,7 +91,7 @@ public class FixerApiCallerTest {
 	
 	@Test
 	public void whenErrorCode404_thenExceptionThrown() {
-		FixerResponseDTO testInput = new FixerResponseDTO();
+		FixerResponseDto testInput = new FixerResponseDto();
 		testInput.setSuccess(false);
 		testInput.setError(Map.of("code", "404"));
 		ApiException e = Assertions.assertThrows(ApiException.class, () -> {testObject.checkFixerResponse(testInput);});

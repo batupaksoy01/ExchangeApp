@@ -11,9 +11,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import batu.springframework.exchangeapp.data.dto.ConversionDTO;
-import batu.springframework.exchangeapp.data.model.Conversion;
-import batu.springframework.exchangeapp.data.repository.ConversionRepository;
+import batu.springframework.exchangeapp.data.dtos.ConversionDto;
+import batu.springframework.exchangeapp.data.models.Conversion;
+import batu.springframework.exchangeapp.data.repositories.ConversionRepository;
 
 public class GetConversionsTest {
 	
@@ -34,7 +34,7 @@ public class GetConversionsTest {
 		responseList.add(new Conversion((long) 1,(float)5,(float)7.5,"EUR","USD",LocalDateTime.now()));
 		responseList.add(new Conversion((long) 1,(float)3,(float)15,"USD","TRY",LocalDateTime.now()));
 		Mockito.when(repositoryMock.findAll(pageable)).thenReturn(new PageImpl<>(responseList, pageable, responseList.size()));
-		List<ConversionDTO> returnList = testObject.getConversions(2, 3).getConversionList();
+		List<ConversionDto> returnList = testObject.getConversions(2, 3).getConversionList();
 		Assertions.assertEquals(responseList.size(), returnList.size());
 		for(int i = 0; i < responseList.size(); i++) {
 			Assertions.assertEquals(responseList.get(i).getSource(), returnList.get(i).getSource());

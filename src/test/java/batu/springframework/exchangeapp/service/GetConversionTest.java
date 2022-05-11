@@ -9,16 +9,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import batu.springframework.exchangeapp.data.dto.ConversionDTO;
-import batu.springframework.exchangeapp.data.dto.ConversionInputDTO;
-import batu.springframework.exchangeapp.data.model.Conversion;
-import batu.springframework.exchangeapp.data.repository.ConversionRepository;
+import batu.springframework.exchangeapp.data.dtos.ConversionDto;
+import batu.springframework.exchangeapp.data.dtos.ConversionInputDto;
+import batu.springframework.exchangeapp.data.models.Conversion;
+import batu.springframework.exchangeapp.data.repositories.ConversionRepository;
+import batu.springframework.exchangeapp.services.ServiceHelper;
 
 public class GetConversionTest {
 	
 	private float amount = (float)5;
 	private float rate = (float)1.5;
-	ConversionInputDTO testInput = new ConversionInputDTO(amount,"EUR","USD");
+	ConversionInputDto testInput = new ConversionInputDto(amount,"EUR","USD");
 	
 	ConversionRepository repositoryMock = Mockito.mock(ConversionRepository.class);
 	ServiceHelper helperMock = Mockito.mock(ServiceHelper.class);
@@ -34,10 +35,10 @@ public class GetConversionTest {
 	@Test
 	public void whenValidRateReceived_thenConversionListReturned() {
 		Mockito.when(helperMock.calculateRate("EUR", "USD")).thenReturn(rate);
-		List<ConversionDTO> returnList = testObject.getConversion(testInput).getConversionList();
+		List<ConversionDto> returnList = testObject.getConversion(testInput).getConversionList();
 		assertNotNull(returnList);
 		assertEquals(returnList.size(),1);
-		ConversionDTO conversion = returnList.get(0);
+		ConversionDto conversion = returnList.get(0);
 		assertEquals(conversion.getSource(), "EUR");
 		assertEquals(conversion.getTarget(), "USD");
 		assertEquals(conversion.getSourceAmount(), amount);
