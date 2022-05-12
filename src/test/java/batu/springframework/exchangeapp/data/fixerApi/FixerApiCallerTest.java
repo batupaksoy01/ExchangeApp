@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.junit.jupiter.api.Assertions;
 
-import batu.springframework.exchangeapp.data.dtos.FixerResponseDto;
-import batu.springframework.exchangeapp.data.exceptions.ApiException;
-import batu.springframework.exchangeapp.external.FixerApiCaller;
+import batu.springframework.exchangeapp.client.FixerApiCaller;
+import batu.springframework.exchangeapp.model.dtos.FixerResponseDto;
+import batu.springframework.exchangeapp.model.exceptions.ApiException;
 
 public class FixerApiCallerTest {
 

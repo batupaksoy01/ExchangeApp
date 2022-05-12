@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.data.exceptions;
+package batu.springframework.exchangeapp.model.exceptions;
 
 import org.springframework.stereotype.Component;
 

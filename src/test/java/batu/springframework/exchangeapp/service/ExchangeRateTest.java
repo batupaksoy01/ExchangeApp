@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import batu.springframework.exchangeapp.data.dtos.ConversionDto;
+import batu.springframework.exchangeapp.model.dtos.ConversionDto;
 import batu.springframework.exchangeapp.services.ExchangeRateService;
 import batu.springframework.exchangeapp.services.ServiceHelper;
 

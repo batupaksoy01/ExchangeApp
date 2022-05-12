@@ -1,8 +1,8 @@
-package batu.springframework.exchangeapp.data.repositories;
+package batu.springframework.exchangeapp.dao.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import batu.springframework.exchangeapp.data.models.Conversion;
+import batu.springframework.exchangeapp.dao.entities.Conversion;
 
 public interface ConversionRepository extends JpaRepository<Conversion, Long>{
 

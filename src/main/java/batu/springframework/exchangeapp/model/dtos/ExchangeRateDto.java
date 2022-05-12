@@ -1,5 +1,6 @@
-package batu.springframework.exchangeapp.data.dtos;
+package batu.springframework.exchangeapp.model.dtos;
 
+import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConversionDto {
+public class ExchangeRateDto {
 	private String source;
 	private String target;
-	private Float sourceAmount;
-	private Float targetAmount;	
+	private BigDecimal rate;
 }

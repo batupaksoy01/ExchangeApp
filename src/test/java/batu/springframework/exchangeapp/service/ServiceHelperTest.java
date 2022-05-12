@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import batu.springframework.exchangeapp.data.dtos.FixerResponseDto;
-import batu.springframework.exchangeapp.data.exceptions.WrongInputException;
-import batu.springframework.exchangeapp.external.FixerApiCaller;
+import batu.springframework.exchangeapp.client.FixerApiCaller;
+import batu.springframework.exchangeapp.model.dtos.FixerResponseDto;
+import batu.springframework.exchangeapp.model.exceptions.WrongInputException;
 import batu.springframework.exchangeapp.services.ServiceHelper;
 
 import static org.junit.jupiter.api.Assertions.*;

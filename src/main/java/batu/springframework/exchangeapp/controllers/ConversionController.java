@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import batu.springframework.exchangeapp.data.dtos.ConversionDto;
-import batu.springframework.exchangeapp.data.dtos.ConversionInputDto;
+import batu.springframework.exchangeapp.model.dtos.ConversionDto;
+import batu.springframework.exchangeapp.model.dtos.ConversionInputDto;
 import batu.springframework.exchangeapp.services.ConversionService;
 import io.swagger.annotations.ApiOperation;
 
@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api")
 public class ConversionController {
 	
-	private ConversionService conversionService;
+	private final ConversionService conversionService;
 
 	public ConversionController(ConversionService conversionService) {
 		this.conversionService = conversionService;

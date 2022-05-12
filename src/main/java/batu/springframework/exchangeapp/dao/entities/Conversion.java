@@ -1,9 +1,17 @@
-package batu.springframework.exchangeapp.data.models;
+package batu.springframework.exchangeapp.dao.entities;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,20 +27,20 @@ public class Conversion implements Serializable{
 	private Long id;
 	
 	@Column(name = "source_amount")
-	private Float sourceAmount;
+	private BigDecimal sourceAmount;
 	@Column(name = "target_amount")
-	private Float targetAmount;
+	private BigDecimal targetAmount;
 	@Column(name = "source")
 	private String source;
 	@Column(name = "target")
 	private String target;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creation_date")
-	private LocalDateTime creationDate;
+	private Date creationDate;
 	
 	@PrePersist
 	private void onCreate() {
-		creationDate = LocalDateTime.now();
+		creationDate = new Date();
 		
 	}
 
@@ -40,19 +48,19 @@ public class Conversion implements Serializable{
 		return id;
 	}
 
-	public Float getSourceAmount() {
+	public BigDecimal getSourceAmount() {
 		return sourceAmount;
 	}
 
-	public void setSourceAmount(Float sourceAmount) {
+	public void setSourceAmount(BigDecimal sourceAmount) {
 		this.sourceAmount = sourceAmount;
 	}
 
-	public Float getTargetAmount() {
+	public BigDecimal getTargetAmount() {
 		return targetAmount;
 	}
 
-	public void setTargetAmount(Float targetAmount) {
+	public void setTargetAmount(BigDecimal targetAmount) {
 		this.targetAmount = targetAmount;
 	}
 
@@ -72,7 +80,7 @@ public class Conversion implements Serializable{
 		this.target = target;
 	}
 
-	public LocalDateTime getCreationDate() {
+	public Date getCreationDate() {
 		return creationDate;
 	}
 	

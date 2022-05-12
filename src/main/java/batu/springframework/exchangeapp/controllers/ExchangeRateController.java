@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import batu.springframework.exchangeapp.data.dtos.ExchangeRateDto;
+import batu.springframework.exchangeapp.model.dtos.ExchangeRateDto;
 import batu.springframework.exchangeapp.services.ExchangeRateService;
 import io.swagger.annotations.ApiOperation;
 
@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api")
 public class ExchangeRateController {
 	
-	private ExchangeRateService exchangeRateService;
+	private final ExchangeRateService exchangeRateService;
 	
 	public ExchangeRateController(ExchangeRateService exchangeRateService) {
 		this.exchangeRateService = exchangeRateService;

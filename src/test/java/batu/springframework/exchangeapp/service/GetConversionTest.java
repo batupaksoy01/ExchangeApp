@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import batu.springframework.exchangeapp.data.dtos.ConversionDto;
-import batu.springframework.exchangeapp.data.dtos.ConversionInputDto;
-import batu.springframework.exchangeapp.data.models.Conversion;
-import batu.springframework.exchangeapp.data.repositories.ConversionRepository;
+import batu.springframework.exchangeapp.dao.entities.Conversion;
+import batu.springframework.exchangeapp.dao.repositories.ConversionRepository;
+import batu.springframework.exchangeapp.model.dtos.ConversionDto;
+import batu.springframework.exchangeapp.model.dtos.ConversionInputDto;
 import batu.springframework.exchangeapp.services.ServiceHelper;
 
 public class GetConversionTest {

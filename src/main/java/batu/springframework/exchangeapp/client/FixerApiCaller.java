@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.external;
+package batu.springframework.exchangeapp.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -7,8 +7,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import batu.springframework.exchangeapp.data.dtos.FixerResponseDto;
-import batu.springframework.exchangeapp.data.exceptions.ApiException;
+import batu.springframework.exchangeapp.model.dtos.FixerResponseDto;
+import batu.springframework.exchangeapp.model.exceptions.ApiException;
 
 @Component
 public class FixerApiCaller {

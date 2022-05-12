@@ -18,8 +18,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import batu.springframework.exchangeapp.data.exceptions.ApiException;
-import batu.springframework.exchangeapp.data.exceptions.WrongInputException;
+import batu.springframework.exchangeapp.model.exceptions.ApiException;
+import batu.springframework.exchangeapp.model.exceptions.WrongInputException;
 
 @ControllerAdvice
 public class ConversionControllerAdvice extends ResponseEntityExceptionHandler {

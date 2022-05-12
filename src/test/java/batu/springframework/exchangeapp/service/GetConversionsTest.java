@@ -11,9 +11,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import batu.springframework.exchangeapp.data.dtos.ConversionDto;
-import batu.springframework.exchangeapp.data.models.Conversion;
-import batu.springframework.exchangeapp.data.repositories.ConversionRepository;
+import batu.springframework.exchangeapp.dao.entities.Conversion;
+import batu.springframework.exchangeapp.dao.repositories.ConversionRepository;
+import batu.springframework.exchangeapp.model.dtos.ConversionDto;
 
 public class GetConversionsTest {
 	

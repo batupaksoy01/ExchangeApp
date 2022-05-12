@@ -1,30 +1,32 @@
 package batu.springframework.exchangeapp.services;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Service;
 
-import batu.springframework.exchangeapp.data.dtos.FixerResponseDto;
-import batu.springframework.exchangeapp.data.exceptions.WrongInputException;
-import batu.springframework.exchangeapp.external.FixerApiCaller;
+import batu.springframework.exchangeapp.client.FixerApiCaller;
+import batu.springframework.exchangeapp.model.dtos.FixerResponseDto;
+import batu.springframework.exchangeapp.model.exceptions.WrongInputException;
 
 @Service
 public class ServiceHelper {
 	
-	private FixerApiCaller apiCaller;
+	private final FixerApiCaller apiCaller;
 
 	public ServiceHelper(FixerApiCaller apiCaller) {
 		this.apiCaller = apiCaller;
 	}
 
-	public Float calculateRate(String source, String target) {
+	public BigDecimal calculateRate(String source, String target) {
 		FixerResponseDto response = apiCaller.makeApiCall(source,target);
 		
-		Float targetRate = getCurrencyRate(target, response, "target");
-		Float sourceRate = getCurrencyRate(source, response, "source");
+		BigDecimal targetRate = getCurrencyRate(target, response, "target");
+		BigDecimal sourceRate = getCurrencyRate(source, response, "source");
 		
-		return targetRate/sourceRate;
+		return targetRate.divide(sourceRate);
 	}
 	
-	private Float getCurrencyRate(String currencyName, FixerResponseDto response, String currencyType) {
+	private BigDecimal getCurrencyRate(String currencyName, FixerResponseDto response, String currencyType) {
 		try {
 			return response.getRates().get(currencyName);
 		}	

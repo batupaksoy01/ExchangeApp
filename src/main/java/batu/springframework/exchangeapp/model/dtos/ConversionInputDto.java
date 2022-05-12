@@ -1,4 +1,6 @@
-package batu.springframework.exchangeapp.data.dtos;
+package batu.springframework.exchangeapp.model.dtos;
+
+import java.math.BigDecimal;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,7 +14,7 @@ import lombok.Data;
 public class ConversionInputDto {
 	@NotNull(message="sourceAmount field is required.")
 	@Positive(message="sourceAmount must be positive.")
-	private Float sourceAmount;
+	private BigDecimal sourceAmount;
 	@NotBlank(message="source field is required.")
 	private String source;
 	@NotBlank(message="target field is required.")
