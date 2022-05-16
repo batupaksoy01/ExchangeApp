@@ -94,7 +94,9 @@ http://localhost:8080/api/conversions
 ```
 
 ## GET /api/conversions
-Returns the list of conversions that were saved to database by the POST mehod described above. Supports pagination.
+Description: Returns the list of conversions that were saved to database by the POST mehod described above. Supports pagination.
+<br /> Return Type: `List<ConversionDto>`
+<br /> Params:
 
 |          Name | Required |  Type   | Default Value                                                                                                                                                            |
 | -------------:|:--------:|:-------:|---------------- 
