@@ -5,42 +5,38 @@ There are three endpoints and all of them are covered below with the parameters 
 
 ## Response
 
-Application will return one of the classes below depending on the success of the operation.
+Application will return one of the classes below depending on the type and success of the operation.
 
-```java
-SuccessResponseDTO 
+```
+ConversionDTO
 {
-  private List<ConversionDTO> conversionList;
-  
-  public boolean isSuccess() {
-	return true;
-  }
+  "source": string,
+  "target": string,
+  "sourceAmount": double,
+  "targetAmount": double
 }
 
-FailResponseDTO 
+ExchangeRateDTO
 {
-  private String errorMessage;
-  
-  public boolean isSuccess() {
-	return false;
-  }
+  "source": string,
+  "target": string,
+  "rate": double
 }
 
-//Not a response by itself but SuccessResponseDTO has dependency to it
-ConversionDTO 
+ErrortDTO
 {
-  private String source;
-  private String target;
-  private float sourceAmount;
-  private float targetAmount;
-  private LocalDateTime dateTime;
+  "status": integer,
+  "error: string,
+  "message": string
 }
 ```
 
-## GET /api/exchangeRate
+## GET /api/exchange-rate
 
-Returns the exchange rate when converting from source currency to target currency. The SuccessResponseDTO will only have one ConversionDTO in the list. 
-That element's targetAmount field will contain the requested rate. The sourceAmount of that element will equal to 1 since the response returns the unit conversion rate.
+Description: Returns the exchange rate when converting from source currency to target currency.  
+<br /> Return Type: `ExchangeRateDto`
+<br /> Params:
+
 
 |          Name | Required |  Type                                                                                                                                                               |
 | -------------:|:--------:|:------- 
@@ -50,95 +46,83 @@ That element's targetAmount field will contain the requested rate. The sourceAmo
 Example call and response:
 
 ```
-http://localhost:8080/api/exchangeRate?source=EUR&target=GBP
+http://localhost:8080/api/exchange-rate?source=EUR&target=GBP
 ```
 
 ```
 {
-"conversionList":[{
-  "source":"EUR",
-  "target":"GBP",
-  "sourceAmount":1.0,
-  "targetAmount":0.855162,
-  "dateTime":"2022-05-09T14:36:17.5021989"
-  }],
-  "success":true
+    "source": "EUR",
+    "target": "GBP",
+    "rate": 0.850668
 }
 ```
 
-## POST /api/getConversion
-Requires a ConversionInputDTO object with all the fields in the request body. Then the target amount is calculated with the exchange rate and the 
-sent conversion is then saved to h2 in memory database. The SuccessResponseDTO will only have one ConversionDTO in the list and that will contain the information 
-for the new database entry that was created by this POST request.
-
+## POST /api/conversions
+Description: Requires a ConversionInputDTO object with all the fields in the request body. Then the target amount is calculated with the exchange rate and the 
+sent conversion is then saved to h2 in memory database. The saved conversion is returned.
+<br /> Return Type: `ConversionDto`
+<br /> Request Body:  
 ```
 ConversionInputDTO
 {
-  "sourceAmount": float,
   "source": String,
-  "target": String
+  "target": String,
+  "sourceAmount": double
 }
 ```
 Example call and response:
 
 ```
-http://localhost:8080/api/getConversion
+http://localhost:8080/api/conversions
 
 //with
 
 {
-  "sourceAmount": 25,
-  "source": "USD",
-  "target": "TRY"
+    "source": "CAD",
+    "target": "TRY",
+    "sourceAmount": 120
 }
 ```
 
 ```
 {
-    "conversionList": [
-        {
-            "source": "USD",
-            "target": "TRY",
-            "sourceAmount": 25.0,
-            "targetAmount": 375.7373,
-            "dateTime": "2022-05-09T14:54:06.8581612"
-        }
-    ],
-    "success": true
+    "source": "CAD",
+    "target": "TRY",
+    "sourceAmount": 120.0,
+    "targetAmount": 1452.87864
 }
 ```
 
-## GET /api/getConversions
+## GET /api/conversions
 Returns the list of conversions that were saved to database by the POST mehod described above. Supports pagination.
 
 |          Name | Required |  Type   | Default Value                                                                                                                                                            |
 | -------------:|:--------:|:-------:|---------------- 
-|     `page` | optional | integer     |    1(First Page)                                                               
+|     `page` | optional | integer     |    0(First Page)                                                               
 |     `size` | optional | integer   |       10
+|     `sort` | optional | Sort Object |  no sorting(default direction is ASC)
 
 Example call and response:
 
 ```
-http://localhost:8080/api/getConversions?page=1&size=2
+http://localhost:8080/api/conversions?page=0&size=2&sort=targetAmount,DESC
 ```
 
 ```
-{
-"conversionList":[{
-  "source":"EUR",
-  "target":"GBP",
-  "sourceAmount":10,
-  "targetAmount":8.55162,
-  "dateTime":"2022-05-09T14:36:17.5021989"
-  },
-  "source":"USD",
-  "target":"GBP",
-  "sourceAmount":100,
-  "targetAmount":80.995923,
-  "dateTime":"2022-05-09T14:42:37.013544"
-  }],
-  "success":true
-}
+[
+    {
+        "source": "EUR",
+        "target": "TRY",
+        "sourceAmount": 100.0,
+        "targetAmount": 1632.0235
+    },
+    {
+        "source": "CAD",
+        "target": "TRY",
+        "sourceAmount": 120.0,
+        "targetAmount": 1453.50384
+    }
+]
 ```
 
 ## /swagger-ui.html and /v2/api-docs
