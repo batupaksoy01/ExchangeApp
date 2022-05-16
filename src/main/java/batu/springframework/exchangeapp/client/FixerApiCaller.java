@@ -1,51 +1,69 @@
 package batu.springframework.exchangeapp.client;
 
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import batu.springframework.exchangeapp.model.dtos.FixerResponseDto;
-import batu.springframework.exchangeapp.model.exceptions.ApiException;
+import batu.springframework.exchangeapp.model.dto.FixerResponseDto;
+import batu.springframework.exchangeapp.model.exception.ApiException;
+import batu.springframework.exchangeapp.model.exception.WrongInputException;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Component
 public class FixerApiCaller {
 	
 	@Value("${fixerApiAccessKey}")
 	private String apiAccessKey;
-	@Value("${fixerApiBaseUrl}")
-	private String apiBaseUrl;
-	
-	public FixerResponseDto makeApiCall(String source, String target) {
-		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl)
-				.queryParam("access_key", apiAccessKey)
-				.queryParam("symbols", source + ',' + target);
-		FixerResponseDto response = restTemplate.getForObject(builder.toUriString(), FixerResponseDto.class);
-		
+	@Value("${fixerApiUrl}")
+	private String apiUrl;
+	RestTemplate restTemplate = new RestTemplate();
+
+	public Double getConversionResult(String source, String target, Double sourceAmount) {
+		HttpHeaders headers = new HttpHeaders();
+        headers.set("apikey", apiAccessKey);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        
+        Map<String, String> uriParams = Map.of(
+        		"source", source,
+        		"target", target,
+        		"sourceAmount", sourceAmount.toString());
+        
+		FixerResponseDto response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, FixerResponseDto.class, uriParams).getBody();
+
 		checkFixerResponse(response);
 		
-		return response;
+		return Optional.ofNullable(response.getResult()).
+				orElseThrow(() -> new ApiException());
 	}
 	
-	public void checkFixerResponse(FixerResponseDto response) {
-		if(response.isSuccess()) {
-			return;
+	protected void checkFixerResponse(FixerResponseDto response) {
+		if (response.isSuccess()) {
+			return;	
 		}
-		String errorCode;
+		
 		try {
-			errorCode = response.getError().get("code");
-		} catch(Exception e) {
-			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY);
+			if (response.getError().get("code").equals("402")) {
+				String errorType = response.getError().get("type");
+				if (errorType.equals("invalid_from_currency")) {
+					throw new WrongInputException("Source currency symbol isn't supported or multiple source currencies are provided.");
+				}
+				else if (errorType.equals("invalid_to_currency")) {
+					throw new WrongInputException("Target currency symbol isn't supported or multiple target currencies are provided.");
+				}
+			}	
+		} catch(NullPointerException e) {
+			throw new ApiException();
 		}
-		if (errorCode.equals("202")) {
-			throw new ApiException("One or more currency symbols are not supported.");
-		}
-		else if (errorCode.equals("404")) {
-			throw new ApiException("The requested resource does not exist.");
-		}
-		throw new ResponseStatusException(HttpStatus.BAD_GATEWAY);
+		
+		throw new ApiException();
 	}
 }

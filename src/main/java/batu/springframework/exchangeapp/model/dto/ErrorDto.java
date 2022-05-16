@@ -1,0 +1,14 @@
+package batu.springframework.exchangeapp.model.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ErrorDto {
+	Integer status;
+	String error;
+	String message;
+}
