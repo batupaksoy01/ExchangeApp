@@ -18,6 +18,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -27,7 +29,7 @@ import batu.springframework.exchangeapp.model.dto.ErrorDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
-public class ConversionsAcceptanceTest {
+public class ConversionsEndToEndTest {
 	@LocalServerPort
 	private int port;
 	private TestRestTemplate restTemplate = new TestRestTemplate();
@@ -46,8 +48,8 @@ public class ConversionsAcceptanceTest {
 					postConversionRequestBuilder(inputDto) , String.class);
 		}
 		
-		List<ConversionDto> response = restTemplate.getForObject(getConversionResourcePath(), List.class);
-
+		List<ConversionDto> response = makeGetConversionsCall(getConversionResourcePath());
+		
 		assertNotNull(response);
 		assertEquals(testInputforGetConversions.size(),response.size());
 		for(int i = 0; i < response.size(); i++) {
@@ -58,7 +60,7 @@ public class ConversionsAcceptanceTest {
 	@Test
 	@Order(2)
 	public void getConversions_PageNotGiven_ConversionDtoListReturned() {
-		List<ConversionDto> response = restTemplate.getForObject(getConversionResourcePath() + "?page=0&size=2", List.class);
+		List<ConversionDto> response = makeGetConversionsCall(getConversionResourcePath() + "?page=0&size=2");
 		
 		assertNotNull(response);
 		assertEquals(2,response.size());
@@ -118,5 +120,18 @@ public class ConversionsAcceptanceTest {
 		assertEquals(expectedDto.getTarget(),returnedDto.getTarget());
 		assertEquals(expectedDto.getSourceAmount(),returnedDto.getSourceAmount());
 		assertNotNull(returnedDto.getTargetAmount());
+	}
+	
+	private List<ConversionDto> makeGetConversionsCall(String path) {
+		String jsonResponse = restTemplate.getForObject(path, String.class);
+		List<ConversionDto> response = null;
+		try {
+			response = new ObjectMapper().readValue(jsonResponse, new TypeReference<List<ConversionDto>>(){});
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return response;
 	}
 }

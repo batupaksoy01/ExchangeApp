@@ -20,7 +20,7 @@ public class ExchangeRateServiceTest {
 	@BeforeAll
 	private static void mockInjectionSetup() {
 		apiCallerMock = Mockito.mock(FixerApiCaller.class);
-		Mockito.when(apiCallerMock.getConversionRate(Mockito.anyString(), Mockito.anyString(), Mockito.any(Double.class)))
+		Mockito.when(apiCallerMock.getConversionResult(Mockito.anyString(), Mockito.anyString(), Mockito.any(Double.class)))
 			.thenReturn(GET_RATE_RETURN_VALUE);
 		
 		testObject = new ExchangeRateService(apiCallerMock);
@@ -30,7 +30,7 @@ public class ExchangeRateServiceTest {
 	public void getExchangeRate_MethodCalled_ApiCallMade() {
 		testObject.getExchangeRate(GENERIC_SOURCE, GENERIC_TARGET);
 		
-		Mockito.verify(apiCallerMock, Mockito.times(1)).getConversionRate(GENERIC_SOURCE, GENERIC_TARGET, 1.0);
+		Mockito.verify(apiCallerMock, Mockito.times(1)).getConversionResult(GENERIC_SOURCE, GENERIC_TARGET, 1.0);
 	}
 	
 	@Test

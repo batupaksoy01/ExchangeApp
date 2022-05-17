@@ -32,7 +32,7 @@ import batu.springframework.exchangeapp.service.ConversionService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ConversionController.class)
-public class ConversionControllerIntegrationTest {
+public class ConversionControllerTest {
 	
 	@Autowired
 	private MockMvc mvc;
@@ -120,25 +120,5 @@ public class ConversionControllerIntegrationTest {
 		mvc.perform(get(path + "?page=1&size=2&sort=id,DESC"));
 		
 		verify(serviceMock).getConversions(PageRequest.of(1, 2, Sort.by("id").descending()));
-	}
-	
-	@Test
-	public void getConversions_ServiceThrewWrongInputException_CatchedByErrorHandler() throws Exception {
-		when(serviceMock.postConversion(any(ConversionInputDto.class))).thenThrow(new WrongInputException("exception message"));
-		
-		String jsonResponse = mvc.perform(get(path)).andReturn().getResponse().getContentAsString();
-		ErrorDto errorDtoResponse = new ObjectMapper().readValue(jsonResponse, ErrorDto.class);
-		
-		ErrorDtoChecker.checkErrorDto(errorDtoResponse, 400, "invalid_currency", "exception message");
-	}
-	
-	@Test
-	public void getConversions_ServiceThrewApiException_CatchedByErrorHandler() throws Exception {
-		when(serviceMock.postConversion(any(ConversionInputDto.class))).thenThrow(new ApiException());
-		
-		String jsonResponse = mvc.perform(get(path)).andReturn().getResponse().getContentAsString();
-		ErrorDto errorDtoResponse = new ObjectMapper().readValue(jsonResponse, ErrorDto.class);
-		
-		ErrorDtoChecker.checkErrorDto(errorDtoResponse, 502, "server_problem", "The server failed to process your request, please try another time or try other endpoints");
 	}
 }

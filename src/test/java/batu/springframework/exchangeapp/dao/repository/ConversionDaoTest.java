@@ -16,7 +16,7 @@ import batu.springframework.exchangeapp.dao.entity.ConversionEntity;
 
 @AutoConfigureTestDatabase
 @DataJpaTest
-public class ConversionDaoIntegrationTest {
+public class ConversionDaoTest {
 	
 	@Autowired
 	private ConversionRepository repo;

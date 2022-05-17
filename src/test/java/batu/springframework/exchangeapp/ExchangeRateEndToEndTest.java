@@ -12,7 +12,7 @@ import batu.springframework.exchangeapp.model.dto.ErrorDto;
 import batu.springframework.exchangeapp.model.dto.ExchangeRateDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ExchangeRateAcceptanceTest {
+class ExchangeRateEndToEndTest {
 
 	@LocalServerPort
 	private int port;

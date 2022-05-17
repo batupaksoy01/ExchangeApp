@@ -20,6 +20,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(WrongInputException.class) 
 	public ResponseEntity<Object> handleWrongInput(WrongInputException exception, WebRequest request){
+		
 		ErrorDto errorDto = new ErrorDto(400, "invalid_currency", exception.getMessage());
 		
 		return handleExceptionInternal(exception, errorDto, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

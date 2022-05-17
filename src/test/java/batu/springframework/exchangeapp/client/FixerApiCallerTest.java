@@ -4,6 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.spy;
+
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -24,13 +32,16 @@ public class FixerApiCallerTest {
 	
 	@Test
 	public void getConversionResult_ApiReturnedResponse_ResponseCheckedAndReturned() {
+		testObject = spy(FixerApiCaller.class);
+		
 		FixerResponseDto mockResponse = new FixerResponseDto(true, 5.0, null);
 		
 		testObject.setRestTemplate(mockRestTemplate(mockResponse));
+		initializeApiParams();
 		
-		assertEquals(mockResponse, testObject.getConversionResult("", "", 1.0));
+		assertEquals(mockResponse.getResult(), testObject.getConversionResult("", "", 1.0));
 		
-		Mockito.verify(testObject, Mockito.times(1)).checkFixerResponse(Mockito.any(FixerResponseDto.class));
+		verify(testObject, times(1)).checkFixerResponse(any(FixerResponseDto.class));
 	}
 	
 	@Test
@@ -39,6 +50,7 @@ public class FixerApiCallerTest {
 		mockResponse.setSuccess(true);
 		
 		testObject.setRestTemplate(mockRestTemplate(mockResponse));
+		initializeApiParams();
 		
 		ApiException exception = assertThrows(ApiException.class, 
 				() -> {testObject.getConversionResult("", "", 1.0);});
@@ -123,16 +135,21 @@ public class FixerApiCallerTest {
 	}
 	
 	private RestTemplate mockRestTemplate(FixerResponseDto mockResponse) {
-		RestTemplate restMock = Mockito.mock(RestTemplate.class);
+		RestTemplate restMock = mock(RestTemplate.class);
 		
-		Mockito.when(restMock.exchange(
-			    Mockito.anyString(),
-			    Mockito.any(HttpMethod.class),
-			    Mockito.any(HttpEntity.class),
+		when(restMock.exchange(
+			    anyString(),
+			    any(HttpMethod.class),
+			    any(HttpEntity.class),
 			    Mockito.<Class<FixerResponseDto>>any(),
 			    Mockito.<String,String>anyMap()))
 				.thenReturn(new ResponseEntity<FixerResponseDto>(mockResponse, HttpStatus.OK));
 		
 		return restMock;
+	}
+	
+	private void initializeApiParams() {
+		testObject.setApiAccessKey("");
+		testObject.setApiUrl("");
 	}
 }

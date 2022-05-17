@@ -1,3 +1,4 @@
+
 package batu.springframework.exchangeapp.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,7 +20,7 @@ import batu.springframework.exchangeapp.service.ExchangeRateService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ExchangeRateController.class)
-public class ExchangeRateControllerIntegrationTest {
+public class ExchangeRateControllerTest {
 	
 	@Autowired
 	private MockMvc mvc;

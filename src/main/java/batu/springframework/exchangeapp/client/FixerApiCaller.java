@@ -3,6 +3,8 @@ package batu.springframework.exchangeapp.client;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,9 +27,14 @@ public class FixerApiCaller {
 	private String apiAccessKey;
 	@Value("${fixerApiUrl}")
 	private String apiUrl;
+	
 	RestTemplate restTemplate = new RestTemplate();
+	
+	private static final Logger LOG = LoggerFactory.getLogger(FixerApiCaller.class);
 
 	public Double getConversionResult(String source, String target, Double sourceAmount) {
+		LOG.info("getConversionResult method called");
+		
 		HttpHeaders headers = new HttpHeaders();
         headers.set("apikey", apiAccessKey);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
@@ -38,8 +45,10 @@ public class FixerApiCaller {
         		"sourceAmount", sourceAmount.toString());
         
 		FixerResponseDto response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, FixerResponseDto.class, uriParams).getBody();
-
+		
 		checkFixerResponse(response);
+		
+		LOG.info("getConversionResult method returning");
 		
 		return Optional.ofNullable(response.getResult()).
 				orElseThrow(() -> new ApiException());
@@ -47,6 +56,7 @@ public class FixerApiCaller {
 	
 	protected void checkFixerResponse(FixerResponseDto response) {
 		if (response.isSuccess()) {
+			LOG.info("response is checked and it is successfull");
 			return;	
 		}
 		

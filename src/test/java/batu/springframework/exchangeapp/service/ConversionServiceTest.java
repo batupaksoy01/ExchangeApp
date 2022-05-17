@@ -36,7 +36,7 @@ public class ConversionServiceTest {
 	
 	@Test
 	public void postConversion_ConversionSavedToDb_ConversionMappedCorrectly() {
-		Mockito.when(apiCallerMock.getConversionRate(Mockito.anyString(), Mockito.anyString(), Mockito.any(Double.class)))
+		Mockito.when(apiCallerMock.getConversionResult(Mockito.anyString(), Mockito.anyString(), Mockito.any(Double.class)))
 			.thenReturn(GET_RATE_RETURN_VALUE);
 		
 		ArgumentCaptor<ConversionEntity> entityCaptor = ArgumentCaptor.forClass(ConversionEntity.class);
@@ -54,7 +54,7 @@ public class ConversionServiceTest {
 	
 	@Test
 	public void postConversion_BeforeMethodReturn_ReturnValueMappedCorrectly() {
-		Mockito.when(apiCallerMock.getConversionRate(Mockito.anyString(), Mockito.anyString(), Mockito.any(Double.class)))
+		Mockito.when(apiCallerMock.getConversionResult(Mockito.anyString(), Mockito.anyString(), Mockito.any(Double.class)))
 			.thenReturn(GET_RATE_RETURN_VALUE);
 		
 		testObject = new ConversionService(repositoryMock, apiCallerMock);
