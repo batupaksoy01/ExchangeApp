@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.controller;
+package batu.springframework.exchangeapp.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,9 +12,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import batu.springframework.exchangeapp.model.dto.ErrorDto;
-import batu.springframework.exchangeapp.model.exception.ApiException;
-import batu.springframework.exchangeapp.model.exception.WrongInputException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 

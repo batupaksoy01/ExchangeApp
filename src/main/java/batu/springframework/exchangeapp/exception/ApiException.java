@@ -1,4 +1,4 @@
-package batu.springframework.exchangeapp.model.exception;
+package batu.springframework.exchangeapp.exception;
 
 import java.util.Objects;
 

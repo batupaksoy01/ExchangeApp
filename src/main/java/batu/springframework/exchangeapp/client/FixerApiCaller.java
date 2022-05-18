@@ -3,23 +3,20 @@ package batu.springframework.exchangeapp.client;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import batu.springframework.exchangeapp.exception.ApiException;
+import batu.springframework.exchangeapp.exception.WrongInputException;
 import batu.springframework.exchangeapp.model.dto.FixerResponseDto;
-import batu.springframework.exchangeapp.model.exception.ApiException;
-import batu.springframework.exchangeapp.model.exception.WrongInputException;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
-@Getter
-@Setter
+@Slf4j
 @Component
 public class FixerApiCaller {
 	
@@ -27,13 +24,14 @@ public class FixerApiCaller {
 	private String apiAccessKey;
 	@Value("${fixerApiUrl}")
 	private String apiUrl;
+	private final RestTemplate restTemplate;
 	
-	RestTemplate restTemplate = new RestTemplate();
-	
-	private static final Logger LOG = LoggerFactory.getLogger(FixerApiCaller.class);
+	public FixerApiCaller(RestTemplateBuilder restTemplateBuilder) {
+		this.restTemplate = restTemplateBuilder.build();
+	}
 
-	public Double getConversionResult(String source, String target, Double sourceAmount) {
-		LOG.info("getConversionResult method called");
+	public Double getApiResult(String source, String target, Double sourceAmount) {
+		log.info("getConversionResult method called");
 		
 		HttpHeaders headers = new HttpHeaders();
         headers.set("apikey", apiAccessKey);
@@ -48,7 +46,7 @@ public class FixerApiCaller {
 		
 		checkFixerResponse(response);
 		
-		LOG.info("getConversionResult method returning");
+		log.info("getConversionResult method returning");
 		
 		return Optional.ofNullable(response.getResult()).
 				orElseThrow(() -> new ApiException());
@@ -56,7 +54,7 @@ public class FixerApiCaller {
 	
 	protected void checkFixerResponse(FixerResponseDto response) {
 		if (response.isSuccess()) {
-			LOG.info("response is checked and it is successfull");
+			log.info("response is checked and it is successfull");
 			return;	
 		}
 		

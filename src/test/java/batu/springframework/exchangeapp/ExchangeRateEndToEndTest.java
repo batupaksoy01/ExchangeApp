@@ -10,6 +10,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import batu.springframework.exchangeapp.model.dto.ErrorDto;
 import batu.springframework.exchangeapp.model.dto.ExchangeRateDto;
+import batu.springframework.exchangeapp.testUtil.ErrorDtoChecker;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ExchangeRateEndToEndTest {
@@ -20,7 +21,8 @@ class ExchangeRateEndToEndTest {
 	
 	@Test
 	public void getExchangeRate_RequestParamsValid_ExchangeRateDtoReturned() {
-		String path = "http://localhost:" + port + "/api/exchange-rate?source=EUR&target=EUR";
+		String path = pathBuilder("EUR", "EUR");
+		
 		ExchangeRateDto response = restTemplate.getForObject(path, ExchangeRateDto.class);
 		
 		assertNotNull(response);
@@ -31,7 +33,8 @@ class ExchangeRateEndToEndTest {
 	
 	@Test
 	public void getExchangeRate_SourceInvalid_ErrorDtoReturned() {
-		String path = "http://localhost:" + port + "/api/exchange-rate?source=abab&target=USD";
+		String path = pathBuilder("aba", "USD");
+		
 		ErrorDto response = restTemplate.getForObject(path, ErrorDto.class);
 		
 		ErrorDtoChecker.checkErrorDto(response, 400, "invalid_currency", 
@@ -40,10 +43,15 @@ class ExchangeRateEndToEndTest {
 	
 	@Test
 	public void getExchangeRate_TargetInvalid_ErrorDtoReturned() {
-		String path = "http://localhost:" + port + "/api/exchange-rate?source=EUR&target=ababa";
+		String path = pathBuilder("EUR", "aba");
+		
 		ErrorDto response = restTemplate.getForObject(path, ErrorDto.class);
 		
 		ErrorDtoChecker.checkErrorDto(response, 400, "invalid_currency", 
 				"Target currency symbol isn't supported or multiple target currencies are provided.");
+	}
+	
+	private String pathBuilder(String source, String target) {
+		 return String.format("http://localhost:%d/api/exchange-rate?source=%s&target=%s", port, source, target);
 	}
 }

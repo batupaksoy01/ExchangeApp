@@ -1,4 +1,6 @@
-package batu.springframework.exchangeapp.model.mapper;
+package batu.springframework.exchangeapp.mapper;
+
+import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -13,4 +15,5 @@ public interface ConversionMapper {
 	 
     ConversionDto conversionToConversionDto(ConversionEntity conversion);
     ConversionEntity conversionInputDtoToConversion(ConversionInputDto conversion);
+    List<ConversionDto> conversionListToConversionDtoList(List<ConversionEntity> conversionEntityList); 
 }

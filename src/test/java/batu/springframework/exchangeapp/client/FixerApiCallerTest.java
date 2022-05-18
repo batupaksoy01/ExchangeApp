@@ -3,153 +3,139 @@ package batu.springframework.exchangeapp.client;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
-
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.spy;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.anything;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.client.MockRestServiceServer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import batu.springframework.exchangeapp.model.dto.FixerResponseDto;
-import batu.springframework.exchangeapp.model.exception.ApiException;
-import batu.springframework.exchangeapp.model.exception.WrongInputException;
+import batu.springframework.exchangeapp.exception.ApiException;
+import batu.springframework.exchangeapp.exception.WrongInputException;
 
+@RestClientTest(FixerApiCaller.class)
+@AutoConfigureWebClient
 public class FixerApiCallerTest {
-
-	private FixerApiCaller testObject = new FixerApiCaller();
+	
+	@Autowired
+	private FixerApiCaller testObject;
+    @Autowired
+    private MockRestServiceServer server;
+    @Autowired
+    private ObjectMapper objectMapper;
 	
 	@Test
 	public void getConversionResult_ApiReturnedResponse_ResponseCheckedAndReturned() {
-		testObject = spy(FixerApiCaller.class);
-		
 		FixerResponseDto mockResponse = new FixerResponseDto(true, 5.0, null);
 		
-		testObject.setRestTemplate(mockRestTemplate(mockResponse));
-		initializeApiParams();
+		setMockResponse(mockResponse);
 		
-		assertEquals(mockResponse.getResult(), testObject.getConversionResult("", "", 1.0));
-		
-		verify(testObject, times(1)).checkFixerResponse(any(FixerResponseDto.class));
+		assertEquals(mockResponse.getResult(), testObject.getApiResult("", "", 1.0));
 	}
 	
 	@Test
-	public void getConversionResult_ApiReturnedEmptySuccessResponse_ApiExceptionThrown() {
+	public void getConversionResult_ApiReturnedEmptySuccessResponse_ApiExceptionThrown() throws JsonProcessingException {
 		FixerResponseDto mockResponse = new FixerResponseDto();
 		mockResponse.setSuccess(true);
 		
-		testObject.setRestTemplate(mockRestTemplate(mockResponse));
-		initializeApiParams();
+		setMockResponse(mockResponse);
 		
 		ApiException exception = assertThrows(ApiException.class, 
-				() -> {testObject.getConversionResult("", "", 1.0);});
+				() -> {testObject.getApiResult("", "", 1.0);});
 		assertEquals(exception, new ApiException());
 	}
 	
 	@Test
-	public void checkFixerResponse_ResponseSuccessfull_ReturnedWithoutException() {
-		FixerResponseDto testInput = new FixerResponseDto();
-		testInput.setSuccess(true);
-		
-		try {
-			testObject.checkFixerResponse(testInput);
-		} catch (WrongInputException|ApiException e) {
-			fail("Exception was thrown");
-		}
-	}
-	
-	@Test
 	public void checkFixerResponse_ErrorMapIsNull_ResponseStatusExceptionThrown() {
-		FixerResponseDto testInput = new FixerResponseDto();
-		testInput.setSuccess(false);
+		FixerResponseDto mockResponse = new FixerResponseDto();
+		mockResponse.setSuccess(false);
+		
+		setMockResponse(mockResponse);
 		
 		ApiException exception = assertThrows(ApiException.class, 
-				() -> {testObject.checkFixerResponse(testInput);});
+				() -> {testObject.getApiResult("","",1.0);});
 		assertEquals(exception, new ApiException());
 	}
 	
 	@Test
 	public void checkFixerResponse_ErrorMapDoesNotContainCode_ResponseStatusExceptionThrown() {
-		FixerResponseDto testInput = new FixerResponseDto();
-		testInput.setSuccess(false);
-		testInput.setError(Map.of());
+		FixerResponseDto mockResponse = new FixerResponseDto();
+		mockResponse.setSuccess(false);
+		mockResponse.setError(Map.of());
+		
+		setMockResponse(mockResponse);
 		
 		ApiException exception = assertThrows(ApiException.class, 
-				() -> {testObject.checkFixerResponse(testInput);});
+				() -> {testObject.getApiResult("","",1.0);});
 		assertEquals(exception, new ApiException());
 	}
 	
 	@Test
 	public void checkFixerResponse_InvalidSourceCurrency_WrongInputExceptionThrown() {
-		FixerResponseDto testInput = new FixerResponseDto();
-		testInput.setSuccess(false);
-		testInput.setError(Map.of("code","402", "type","invalid_from_currency"));
+		FixerResponseDto mockResponse = new FixerResponseDto();
+		mockResponse.setSuccess(false);
+		mockResponse.setError(Map.of("code","402", "type","invalid_from_currency"));
+		
+		setMockResponse(mockResponse);
 		
 		WrongInputException exception = assertThrows(WrongInputException.class, 
-				() -> {testObject.checkFixerResponse(testInput);});
+				() -> {testObject.getApiResult("","",1.0);});
 		assertEquals(exception.getMessage(), "Source currency symbol isn't supported or multiple source currencies are provided.");
 	}
 	
 	@Test
 	public void checkFixerResponse_InvalidTargetCurrency_WrongInputExceptionThrown() {
-		FixerResponseDto testInput = new FixerResponseDto();
-		testInput.setSuccess(false);
-		testInput.setError(Map.of("code","402", "type","invalid_to_currency"));
+		FixerResponseDto mockResponse = new FixerResponseDto();
+		mockResponse.setSuccess(false);
+		mockResponse.setError(Map.of("code","402", "type","invalid_to_currency"));
+		
+		setMockResponse(mockResponse);
 		
 		WrongInputException exception = assertThrows(WrongInputException.class, 
-				() -> {testObject.checkFixerResponse(testInput);});
+				() -> {testObject.getApiResult("","",1.0);});
 		assertEquals(exception.getMessage(), "Target currency symbol isn't supported or multiple target currencies are provided.");
 	}
 	
 	@Test
 	public void checkFixerResponse_ErrorCode402TypeUnknown_ApiExceptionThrown() {
-		FixerResponseDto testInput = new FixerResponseDto();
-		testInput.setSuccess(false);
-		testInput.setError(Map.of("code","402", "type","different_type"));
+		FixerResponseDto mockResponse = new FixerResponseDto();
+		mockResponse.setSuccess(false);
+		mockResponse.setError(Map.of("code","402", "type","different_type"));
+		
+		setMockResponse(mockResponse);
 		
 		ApiException exception = assertThrows(ApiException.class, 
-				() -> {testObject.checkFixerResponse(testInput);});
+				() -> {testObject.getApiResult("","",1.0);});
 		assertEquals(exception, new ApiException());
 	}
 
 	@Test
 	public void checkFixerResponse_ErrorCodeIsOther_ResponseStatusExceptionThrown() {
-		FixerResponseDto testInput = new FixerResponseDto();
-		testInput.setSuccess(false);
-		testInput.setError(Map.of("code","550"));
+		FixerResponseDto mockResponse = new FixerResponseDto();
+		mockResponse.setSuccess(false);
+		mockResponse.setError(Map.of("code","550"));
+		
+		setMockResponse(mockResponse);
 		
 		ApiException exception = assertThrows(ApiException.class, 
-				() -> {testObject.checkFixerResponse(testInput);});
+				() -> {testObject.getApiResult("","",1.0);});
 		assertEquals(exception, new ApiException());
 	}
 	
-	private RestTemplate mockRestTemplate(FixerResponseDto mockResponse) {
-		RestTemplate restMock = mock(RestTemplate.class);
-		
-		when(restMock.exchange(
-			    anyString(),
-			    any(HttpMethod.class),
-			    any(HttpEntity.class),
-			    Mockito.<Class<FixerResponseDto>>any(),
-			    Mockito.<String,String>anyMap()))
-				.thenReturn(new ResponseEntity<FixerResponseDto>(mockResponse, HttpStatus.OK));
-		
-		return restMock;
-	}
-	
-	private void initializeApiParams() {
-		testObject.setApiAccessKey("");
-		testObject.setApiUrl("");
+	private void setMockResponse(FixerResponseDto mockResponse) {
+		try {
+			server.expect(anything()).andRespond(withSuccess(objectMapper.writeValueAsString(mockResponse), MediaType.APPLICATION_JSON));
+		} catch (JsonProcessingException e) {
+			fail("Given mockResponse couldn't be cast to JSON String");
+		}
 	}
 }
