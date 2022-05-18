@@ -16,17 +16,15 @@ import batu.springframework.exchangeapp.model.dto.ConversionDto;
 import batu.springframework.exchangeapp.model.dto.ConversionInputDto;
 import batu.springframework.exchangeapp.service.ConversionService;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class ConversionController {
 	
 	private final ConversionService conversionService; 
-
-	public ConversionController(ConversionService conversionService) {
-		this.conversionService = conversionService;
-	}
 
 	@PostMapping("/conversions")
 	@ApiOperation(value="Create a currency conversion in the database.", 

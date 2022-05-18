@@ -5,7 +5,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -26,6 +29,7 @@ import batu.springframework.exchangeapp.model.dto.ErrorDto;
 import batu.springframework.exchangeapp.testUtil.ConversionComparator;
 import batu.springframework.exchangeapp.testUtil.ErrorDtoChecker;
 
+@TestInstance(Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PostConversionsEndToEndTest implements ConversionComparator{
 	@LocalServerPort
@@ -36,6 +40,11 @@ public class PostConversionsEndToEndTest implements ConversionComparator{
 	private ConversionRepository conversionRepository;
 	
 	private ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+	
+	@BeforeAll
+	public void cleanRepo() {
+		conversionRepository.deleteAll();
+	}
 	
 	@Test
 	public void postConversion_RequestBodyValid_SavedToDbConversionDtoReturned() {

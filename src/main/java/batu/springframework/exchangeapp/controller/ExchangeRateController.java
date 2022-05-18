@@ -8,16 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 import batu.springframework.exchangeapp.model.dto.ExchangeRateDto;
 import batu.springframework.exchangeapp.service.ExchangeRateService;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class ExchangeRateController {
 	
 	private final ExchangeRateService exchangeRateService;
-	
-	public ExchangeRateController(ExchangeRateService exchangeRateService) {
-		this.exchangeRateService = exchangeRateService;
-	}
 
 	@GetMapping("/exchange-rate")
 	@ApiOperation(value="Get a specific exchange rate between two currencies.", 

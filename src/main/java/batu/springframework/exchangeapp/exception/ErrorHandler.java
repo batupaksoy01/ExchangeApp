@@ -20,6 +20,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(WrongInputException.class) 
 	public ResponseEntity<Object> handleWrongInput(WrongInputException exception, WebRequest request){
+		log.info("Handling WrongInputException: message= " + exception.getMessage());
 		
 		ErrorDto errorDto = new ErrorDto(400, "invalid_currency", exception.getMessage());
 		
@@ -28,6 +29,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(ApiException.class) 
 	public ResponseEntity<Object> handleApiException(ApiException exception, WebRequest request){
+		log.info("Handling ApiException: message= " + exception.getMessage());
+		
 		ErrorDto errorDto = new ErrorDto(502, "server_problem", exception.getMessage());
 		
 		return handleExceptionInternal(exception, errorDto, new HttpHeaders(), HttpStatus.BAD_GATEWAY, request);
@@ -39,6 +42,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 		String message = ex.getParameterName() + " request parameter is required.";
 		ErrorDto errorDto = new ErrorDto(400, "missing_request_parameter", message);
 		
+		log.info("Handling MissingServletRequestParameterException: message= " + message);
+		
 		return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.BAD_GATEWAY, request);
 	}
 	
@@ -48,6 +53,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 		String message = "Request body is missing or it is not readable.";
 		ErrorDto errorDto = new ErrorDto(400, "invalid_request_body", message);
 		
+		log.info("Handling HttpMessageNotReadableException: message= " + message);
+		
 		return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
@@ -56,6 +63,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		String message = ex.getFieldErrors().get(0).getDefaultMessage();
 		ErrorDto errorDto = new ErrorDto(400, "invalid_request_body", message);
+		
+		log.info("Handling MethodArgumentNotValidException: message= " + message);
 		
 		return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}	

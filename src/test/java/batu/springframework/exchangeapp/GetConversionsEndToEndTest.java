@@ -41,6 +41,7 @@ public class GetConversionsEndToEndTest implements ConversionComparator {
 	
 	@BeforeAll
 	public void fillRepo() {
+		conversionRepository.deleteAll();
 		for (ConversionEntity inputEntity: repoContent) {
 			conversionRepository.save(inputEntity);
 		}

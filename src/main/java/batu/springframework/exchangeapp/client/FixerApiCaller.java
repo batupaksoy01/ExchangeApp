@@ -31,8 +31,6 @@ public class FixerApiCaller {
 	}
 
 	public Double getApiResult(String source, String target, Double sourceAmount) {
-		log.info("getConversionResult method called");
-		
 		HttpHeaders headers = new HttpHeaders();
         headers.set("apikey", apiAccessKey);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
@@ -46,32 +44,39 @@ public class FixerApiCaller {
 		
 		checkFixerResponse(response);
 		
-		log.info("getConversionResult method returning");
-		
 		return Optional.ofNullable(response.getResult()).
 				orElseThrow(() -> new ApiException());
 	}
 	
 	protected void checkFixerResponse(FixerResponseDto response) {
 		if (response.isSuccess()) {
-			log.info("response is checked and it is successfull");
+			log.info("checkfixerResponse.start: response successfull");
 			return;	
 		}
 		
 		try {
-			if (response.getError().get("code").equals("402")) {
-				String errorType = response.getError().get("type");
+			Map<String, String> errorMap = response.getError();
+			
+			if (errorMap.get("code").equals("402")) {
+				
+				String errorType = errorMap.get("type");
 				if (errorType.equals("invalid_from_currency")) {
+					log.info("checkfixerResponse.end: WrongInputException thrown");
 					throw new WrongInputException("Source currency symbol isn't supported or multiple source currencies are provided.");
 				}
 				else if (errorType.equals("invalid_to_currency")) {
+					log.info("checkfixerResponse.end: WrongInputException thrown");
 					throw new WrongInputException("Target currency symbol isn't supported or multiple target currencies are provided.");
+				}
+				
+				else {
+					log.error("checkfixerResponse.end: api error= " + errorMap.get("info"));
+					throw new ApiException();
 				}
 			}	
 		} catch(NullPointerException e) {
+			log.error("checkfixerResponse.end: api error is in unexpected format");
 			throw new ApiException();
 		}
-		
-		throw new ApiException();
 	}
 }
